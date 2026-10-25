@@ -14,8 +14,6 @@ def load_model():
 
 
 
-
-def predict(housing_data):
-    model = load_model()
+def predict(model, housing_data):
     prediction = model.predict(housing_data)
     return prediction

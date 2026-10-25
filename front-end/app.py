@@ -6,11 +6,10 @@ API_URL = "http://localhost:8000"
 
 st.set_page_config(
     page_title="California Housing Predictor",
-    page_icon="🏠",
     layout="centered"
 )
 
-st.title("🏠 California Housing Predictor")
+st.title("California Housing Predictor")
 st.write("Enter housing information to estimate the property value using AI.")
 
 # Backend connection
@@ -106,27 +105,29 @@ if submitted:
     }
 
     try:
-        with st.spinner("Predicting house price..."):
+        with st.spinner("Predicting and generating AI explanation..."):
             response = requests.post(
-                f"{API_URL}/predict",
+                f"{API_URL}/prediction_explanation",
                 json=housing_data,
-                timeout=60
+                timeout=180
             )
             response.raise_for_status()
-
-        result = response.json()
+            result = response.json()
 
         price = result["price_usd"]
 
         st.success("Prediction completed!")
-
         st.metric(
-            label="Estimated House Value",
+            label="Estimated Median Housing Value",
             value=f"${price:,.2f}"
         )
 
         if "model" in result:
             st.caption(f"Prediction model: {result['model']}")
+
+        st.divider()
+        st.subheader("AI Explanation")
+        st.write(result["explanation"])
 
         with st.expander("View Input Data"):
             st.json(housing_data)
